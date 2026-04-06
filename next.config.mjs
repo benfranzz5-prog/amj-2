@@ -4,6 +4,7 @@ import { withPayload } from '@payloadcms/next/withPayload'
 const nextConfig = {
   experimental: {
     largePageDataBytes: 128 * 1024,
+    instrumentationHook: true,
   },
   serverExternalPackages: ['sharp', 'pg', 'pg-pool', 'drizzle-orm'],
 }
