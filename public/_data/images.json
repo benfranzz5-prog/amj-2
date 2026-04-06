@@ -1,0 +1,7 @@
+{
+  "hero_banner": { "src": "", "label": "Hero Banner" },
+  "cta_banner": { "src": "", "label": "CTA Banner" },
+  "about_featured": { "src": "", "label": "About Featured Image" },
+  "fresho_logo": { "src": "1freshologo.webp", "label": "Fresho Logo" },
+  "delivery_featured": { "src": "", "label": "Delivery Featured Image" }
+}

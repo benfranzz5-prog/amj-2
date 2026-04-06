@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMJ CMS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0f172a}
+#login-box{background:#1e293b;padding:2.5rem;border-radius:12px;width:340px;text-align:center}
+#login-box h1{color:#9AC92C;font-size:1.5rem;margin-bottom:.5rem}
+#login-box p{color:#94a3b8;font-size:.875rem;margin-bottom:1.5rem}
+#login-box input{width:100%;padding:.75rem 1rem;border:1px solid #334155;border-radius:8px;background:#0f172a;color:#f1f5f9;font-size:1rem;margin-bottom:1rem}
+#login-box button{width:100%;padding:.75rem;background:#9AC92C;border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+#login-box button:hover{background:#7aaa1a}
+#login-error{color:#f87171;font-size:.875rem;margin-top:.75rem;display:none}
+#app{display:none;height:100vh;overflow:hidden}
+#sidebar{width:220px;background:#0f172a;height:100vh;display:flex;flex-direction:column;position:fixed;left:0;top:0}
+#sidebar-logo{padding:1.25rem 1rem;border-bottom:1px solid #1e293b;color:#9AC92C;font-weight:700;font-size:1rem}
+#sidebar-logo span{color:#94a3b8;font-size:.75rem;display:block;font-weight:400}
+#sidebar-nav{flex:1;overflow-y:auto;padding:.5rem 0}
+.nav-item{display:block;padding:.65rem 1.25rem;color:#94a3b8;cursor:pointer;font-size:.875rem;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{color:#f1f5f9;background:#1e293b}
+.nav-item.active{color:#9AC92C;border-left-color:#9AC92C;background:#1e293b}
+#logout-btn{padding:1rem;color:#64748b;font-size:.8rem;cursor:pointer;border-top:1px solid #1e293b;text-align:center}
+#logout-btn:hover{color:#f87171}
+#main{margin-left:220px;height:100vh;overflow-y:auto;padding:2rem}
+#section-title{font-size:1.5rem;font-weight:700;margin-bottom:1.5rem;color:#1e293b}
+#fields-container{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.field-group{margin-bottom:1.25rem}
+.field-group label{display:block;font-size:.8rem;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.field-group input,.field-group textarea{width:100%;padding:.6rem .75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:.9rem;color:#1e293b;font-family:inherit}
+.field-group textarea{min-height:100px;resize:vertical}
+.field-group input:focus,.field-group textarea:focus{outline:none;border-color:#9AC92C;box-shadow:0 0 0 3px rgba(154,201,44,.15)}
+#save-bar{display:flex;align-items:center;gap:1rem;margin-top:1.5rem}
+#save-btn{padding:.65rem 2rem;background:#9AC92C;border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer}
+#save-btn:hover{background:#7aaa1a}
+#save-btn:disabled{background:#94a3b8;cursor:not-allowed}
+#save-status{font-size:.875rem;color:#64748b}
+/* Gallery */
+#gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-top:1rem}
+.gallery-item{position:relative;border-radius:8px;overflow:hidden;background:#f8fafc;border:1px solid #e2e8f0}
+.gallery-item img{width:100%;height:130px;object-fit:cover;display:block}
+.gallery-item-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);border:none;border-radius:4px;color:#fff;width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+#upload-area{border:2px dashed #cbd5e1;border-radius:10px;padding:2rem;text-align:center;color:#64748b;cursor:pointer;transition:border-color .2s;margin-top:1rem}
+#upload-area:hover,#upload-area.drag{border-color:#9AC92C;color:#1e293b}
+#upload-input{display:none}
+/* Site images */
+.slot-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem}
+.slot-thumb{width:100px;height:70px;object-fit:cover;border-radius:6px;background:#f1f5f9;border:1px solid #e2e8f0}
+.slot-info{flex:1}
+.slot-label{font-weight:600;font-size:.9rem;color:#1e293b}
+.slot-src{font-size:.75rem;color:#94a3b8;margin-top:.2rem;word-break:break-all}
+.slot-replace{padding:.4rem .9rem;background:#0f172a;border:none;border-radius:6px;color:#fff;font-size:.8rem;cursor:pointer}
+.slot-replace:hover{background:#1e293b}
+#img-upload-input{display:none}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div id="login-box">
+    <h1>AMJ CMS</h1>
+    <p>Enter your admin password to continue</p>
+    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password"/>
+    <button id="login-btn">Sign In</button>
+    <div id="login-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <div id="sidebar">
+    <div id="sidebar-logo">AMJ CMS <span>Content Manager</span></div>
+    <div id="sidebar-nav">
+      <div class="nav-item active" data-section="hero">Hero</div>
+      <div class="nav-item" data-section="nav">Navigation</div>
+      <div class="nav-item" data-section="about">About</div>
+      <div class="nav-item" data-section="contact">Contact</div>
+      <div class="nav-item" data-section="footer">Footer</div>
+      <div class="nav-item" data-section="gallery">📷 Gallery</div>
+      <div class="nav-item" data-section="images">🖼 Site Images</div>
+    </div>
+    <div id="logout-btn">Sign out</div>
+  </div>
+  <div id="main">
+    <div id="section-title">Hero</div>
+    <div id="fields-container"></div>
+  </div>
+</div>
+
+<script>
+// ── Schemas ─────────────────────────────────────────────────────────
+const SCHEMAS = {
+  hero: [
+    { key:'eyebrow', label:'Eyebrow text', type:'text' },
+    { key:'titleLine1', label:'Title line 1', type:'text' },
+    { key:'titleLine2', label:'Title line 2', type:'text' },
+    { key:'sub', label:'Sub-paragraph', type:'textarea' },
+    { key:'ctaPrimary', label:'Primary CTA label', type:'text' },
+    { key:'ctaOutline', label:'Outline CTA label', type:'text' },
+  ],
+  nav: [
+    { key:'wholesale', label:'Wholesale', type:'text' },
+    { key:'aboutAmj', label:'About AMJ', type:'text' },
+    { key:'products', label:'Products', type:'text' },
+    { key:'media', label:'Media', type:'text' },
+    { key:'environment', label:'Environment', type:'text' },
+    { key:'contact', label:'Contact', type:'text' },
+    { key:'marketReport', label:'Market Report', type:'text' },
+  ],
+  about: [
+    { key:'sectionLabel', label:'Section label', type:'text' },
+    { key:'heading', label:'Heading', type:'text' },
+    { key:'leadParagraph', label:'Lead paragraph', type:'textarea' },
+    { key:'body1', label:'Body paragraph 1', type:'textarea' },
+    { key:'body2', label:'Body paragraph 2', type:'textarea' },
+    { key:'body3', label:'Body paragraph 3', type:'textarea' },
+    { key:'ctaLabel', label:'CTA label', type:'text' },
+  ],
+  contact: [
+    { key:'persons', label:'Contact persons', type:'text' },
+    { key:'addressStreet', label:'Street address', type:'text' },
+    { key:'addressCity', label:'City/State', type:'text' },
+    { key:'addressGPO', label:'GPO address', type:'text' },
+    { key:'phone', label:'Phone', type:'text' },
+    { key:'fax', label:'Fax', type:'text' },
+    { key:'email', label:'Email', type:'text' },
+    { key:'formNote', label:'Form note', type:'textarea' },
+  ],
+  footer: [
+    { key:'companyName', label:'Company name', type:'text' },
+    { key:'companySubtitle', label:'Subtitle', type:'text' },
+    { key:'addressStreet', label:'Address', type:'text' },
+    { key:'phone', label:'Phone', type:'text' },
+    { key:'fax', label:'Fax', type:'text' },
+    { key:'email', label:'Email', type:'text' },
+    { key:'commitmentParagraph', label:'Commitment paragraph', type:'textarea' },
+    { key:'designerLabel', label:'Designer label', type:'text' },
+    { key:'designerUrl', label:'Designer URL', type:'text' },
+  ],
+}
+
+const SECTION_LABELS = {
+  hero:'Hero', nav:'Navigation', about:'About', contact:'Contact',
+  footer:'Footer', gallery:'Gallery', images:'Site Images',
+}
+
+let currentSection = 'hero'
+let currentData = {}
+let currentSha = null
+let pendingSlot = null
+
+// ── Login ────────────────────────────────────────────────────────────
+document.getElementById('login-btn').onclick = doLogin
+document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin() })
+
+async function doLogin() {
+  const pw = document.getElementById('password-input').value
+  const err = document.getElementById('login-error')
+  err.style.display = 'none'
+  const r = await fetch('/api/admin-login', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ password: pw }), credentials:'include'
+  })
+  if (r.ok) {
+    document.getElementById('login-screen').style.display = 'none'
+    document.getElementById('app').style.display = 'flex'
+    loadSection('hero')
+  } else {
+    err.style.display = 'block'
+  }
+}
+
+// Check existing session on load
+fetch('/api/admin-auth-check', { credentials:'include' }).then(r => {
+  if (r.ok) {
+    document.getElementById('login-screen').style.display = 'none'
+    document.getElementById('app').style.display = 'flex'
+    loadSection('hero')
+  }
+})
+
+document.getElementById('logout-btn').onclick = () => {
+  document.cookie = 'amj_session=; Max-Age=0; Path=/'
+  location.reload()
+}
+
+// ── Nav ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.onclick = () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
+    el.classList.add('active')
+    loadSection(el.dataset.section)
+  }
+})
+
+// ── Load section ─────────────────────────────────────────────────────
+async function loadSection(section) {
+  currentSection = section
+  document.getElementById('section-title').textContent = SECTION_LABELS[section] || section
+  const container = document.getElementById('fields-container')
+
+  if (section === 'gallery') { renderGallery(); return }
+  if (section === 'images') { renderImages(); return }
+
+  container.innerHTML = '<p style="color:#94a3b8">Loading…</p>'
+  try {
+    const r = await fetch(`/api/admin-content?section=${section}`, { credentials:'include' })
+    if (!r.ok) throw new Error(await r.text())
+    const { content, sha } = await r.json()
+    currentData = content
+    currentSha = sha
+    renderFields(section, content)
+  } catch(e) {
+    container.innerHTML = `<p style="color:#f87171">Error: ${e.message}</p>`
+  }
+}
+
+function renderFields(section, data) {
+  const schema = SCHEMAS[section] || []
+  const container = document.getElementById('fields-container')
+  container.innerHTML = ''
+
+  schema.forEach(f => {
+    const g = document.createElement('div')
+    g.className = 'field-group'
+    const lbl = document.createElement('label')
+    lbl.textContent = f.label
+    g.appendChild(lbl)
+    const inp = f.type === 'textarea' ? document.createElement('textarea') : document.createElement('input')
+    if (f.type === 'text') inp.type = 'text'
+    inp.value = data[f.key] || ''
+    inp.dataset.key = f.key
+    inp.addEventListener('input', () => { currentData[f.key] = inp.value })
+    g.appendChild(inp)
+    container.appendChild(g)
+  })
+
+  const bar = document.createElement('div')
+  bar.id = 'save-bar'
+  bar.innerHTML = '<button id="save-btn">Save Changes</button><span id="save-status"></span>'
+  container.appendChild(bar)
+  document.getElementById('save-btn').onclick = saveSection
+}
+
+async function saveSection() {
+  const btn = document.getElementById('save-btn')
+  const status = document.getElementById('save-status')
+  btn.disabled = true
+  status.textContent = 'Saving…'
+  try {
+    const r = await fetch('/api/admin-save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ section: currentSection, content: currentData }),
+      credentials:'include'
+    })
+    if (!r.ok) throw new Error(await r.text())
+    status.textContent = '✓ Saved'
+    setTimeout(() => { status.textContent = '' }, 3000)
+  } catch(e) {
+    status.textContent = `Error: ${e.message}`
+  } finally {
+    btn.disabled = false
+  }
+}
+
+// ── Gallery ──────────────────────────────────────────────────────────
+async function renderGallery() {
+  const container = document.getElementById('fields-container')
+  container.innerHTML = '<p style="color:#94a3b8">Loading gallery…</p>'
+
+  let gallery = []
+  try {
+    const r = await fetch(`/api/admin-content?section=gallery`, { credentials:'include' })
+    if (r.ok) {
+      const { content } = await r.json()
+      gallery = Array.isArray(content) ? content : []
+    }
+  } catch {}
+
+  container.innerHTML = `
+    <div id="upload-area">
+      <div style="font-size:2rem">📤</div>
+      <div style="margin-top:.5rem;font-weight:600">Drop images here or click to upload</div>
+      <div style="font-size:.8rem;margin-top:.25rem">JPEG, PNG, WebP — max 10 MB each</div>
+      <input type="file" id="upload-input" multiple accept="image/*"/>
+    </div>
+    <div id="gallery-grid"></div>
+  `
+
+  renderGalleryGrid(gallery)
+
+  const area = document.getElementById('upload-area')
+  const inp = document.getElementById('upload-input')
+  area.onclick = () => inp.click()
+  area.ondragover = e => { e.preventDefault(); area.classList.add('drag') }
+  area.ondragleave = () => area.classList.remove('drag')
+  area.ondrop = e => { e.preventDefault(); area.classList.remove('drag'); handleFiles(e.dataTransfer.files) }
+  inp.onchange = () => handleFiles(inp.files)
+}
+
+function renderGalleryGrid(gallery) {
+  const grid = document.getElementById('gallery-grid')
+  grid.innerHTML = ''
+  gallery.forEach(item => {
+    const div = document.createElement('div')
+    div.className = 'gallery-item'
+    div.innerHTML = `<img src="/${item.src}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22130%22><rect fill=%22%23f1f5f9%22 width=%22160%22 height=%22130%22/></svg>'"/><button class="gallery-item-del" title="Delete">✕</button>`
+    div.querySelector('.gallery-item-del').onclick = () => deletePhoto(item.src, div)
+    grid.appendChild(div)
+  })
+}
+
+async function handleFiles(files) {
+  for (const file of files) {
+    const compressed = await compressImage(file)
+    const fd = new FormData()
+    fd.append('file', compressed, file.name)
+    const r = await fetch('/api/admin-upload', { method:'POST', body: fd, credentials:'include' })
+    if (r.ok) {
+      const { src } = await r.json()
+      const grid = document.getElementById('gallery-grid')
+      const div = document.createElement('div')
+      div.className = 'gallery-item'
+      div.innerHTML = `<img src="/${src}" loading="lazy"/><button class="gallery-item-del" title="Delete">✕</button>`
+      div.querySelector('.gallery-item-del').onclick = () => deletePhoto(src, div)
+      grid.prepend(div)
+    }
+  }
+}
+
+async function deletePhoto(src, el) {
+  if (!confirm('Delete this photo?')) return
+  const r = await fetch('/api/admin-delete-photo', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ src }), credentials:'include'
+  })
+  if (r.ok) el.remove()
+}
+
+function compressImage(file) {
+  return new Promise(resolve => {
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      const MAX = 1920
+      let w = img.width, h = img.height
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX }
+      if (h > MAX) { w = Math.round(w * MAX / h); h = MAX }
+      const canvas = document.createElement('canvas')
+      canvas.width = w; canvas.height = h
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h)
+      canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85)
+    }
+    img.src = url
+  })
+}
+
+// ── Site Images ──────────────────────────────────────────────────────
+async function renderImages() {
+  const container = document.getElementById('fields-container')
+  container.innerHTML = '<p style="color:#94a3b8">Loading…</p>'
+
+  let images = {}
+  try {
+    const r = await fetch(`/api/admin-content?section=images`, { credentials:'include' })
+    if (r.ok) { const { content } = await r.json(); images = content || {} }
+  } catch {}
+
+  container.innerHTML = '<input type="file" id="img-upload-input" accept="image/*"/>'
+  const slots = Object.entries(images)
+  if (!slots.length) {
+    container.innerHTML += '<p style="color:#94a3b8;margin-top:1rem">No image slots configured.</p>'
+    return
+  }
+
+  slots.forEach(([slot, info]) => {
+    const card = document.createElement('div')
+    card.className = 'slot-card'
+    card.innerHTML = `
+      <img class="slot-thumb" src="${info.src ? '/' + info.src : ''}" onerror="this.src=''" alt="${info.label || slot}"/>
+      <div class="slot-info">
+        <div class="slot-label">${info.label || slot}</div>
+        <div class="slot-src">${info.src || 'No image set'}</div>
+      </div>
+      <button class="slot-replace" data-slot="${slot}" data-label="${info.label || slot}">Replace</button>
+    `
+    card.querySelector('.slot-replace').onclick = () => {
+      pendingSlot = { slot, label: info.label || slot }
+      document.getElementById('img-upload-input').click()
+    }
+    container.appendChild(card)
+  })
+
+  document.getElementById('img-upload-input').onchange = async e => {
+    const file = e.target.files[0]
+    if (!file || !pendingSlot) return
+    const compressed = await compressImage(file)
+    const fd = new FormData()
+    fd.append('file', compressed, file.name)
+    fd.append('slot', pendingSlot.slot)
+    fd.append('label', pendingSlot.label)
+    const r = await fetch('/api/admin-replace-image', { method:'POST', body: fd, credentials:'include' })
+    if (r.ok) {
+      renderImages()
+    } else {
+      alert('Upload failed: ' + (await r.text()))
+    }
+    e.target.value = ''
+    pendingSlot = null
+  }
+}
+</script>
+</body>
+</html>
