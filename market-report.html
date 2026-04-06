@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market Report | AMJ Produce</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary:    #9AC92C;
+      --color-primary-dk: #7aaa1a;
+      --color-accent:     #28A745;
+      --color-accent-dk:  #1e7a33;
+      --color-fg:         #1a1a1a;
+      --color-fg-muted:   #555;
+      --color-border:     #dee2e6;
+      --color-bg:         #f5f7f2;
+      --color-white:      #ffffff;
+      --color-black:      #000000;
+      --font-head: 'Lobster', Georgia, serif;
+      --font-body: 'Poppins', system-ui, sans-serif;
+      --radius: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 2rem;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav a { text-decoration: none; }
+    .nav-logo-img { height: 44px; width: auto; display: block; }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      letter-spacing: 0.04em;
+    }
+    .btn-logout {
+      padding: 0.45rem 1rem;
+      background: transparent;
+      border: 1.5px solid var(--color-border);
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 200ms, color 200ms;
+    }
+    .btn-logout:hover { border-color: var(--color-fg-muted); color: var(--color-fg); }
+
+    /* ── Page ── */
+    main { flex: 1; padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 5vw, 3rem); max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    .page-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--color-primary);
+    }
+    .page-header .eyebrow {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--color-fg);
+      margin-bottom: 0.4rem;
+    }
+    .page-header p { font-size: 0.9rem; color: var(--color-fg-muted); }
+
+    /* ── Report placeholder card ── */
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .report-card {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: box-shadow 200ms ease, transform 200ms ease;
+    }
+    .report-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.09); transform: translateY(-2px); }
+
+    .report-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .report-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+    }
+    .tag-weekly  { background: rgba(154,201,44,0.15); color: #5a7a10; }
+    .tag-monthly { background: rgba(40,167,69,0.12);  color: #1e6b32; }
+    .tag-special { background: rgba(108,117,125,0.12); color: #444; }
+
+    .report-date { font-size: 0.78rem; color: var(--color-fg-muted); }
+    .report-card h3 { font-size: 1rem; font-weight: 600; color: var(--color-fg); }
+    .report-card p  { font-size: 0.85rem; color: var(--color-fg-muted); line-height: 1.55; flex: 1; }
+
+    .btn-download {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-primary);
+      color: var(--color-black);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 200ms;
+    }
+    .btn-download:hover { background: var(--color-primary-dk); color: var(--color-white); }
+
+    /* ── Coming soon banner ── */
+    .coming-soon {
+      background: var(--color-white);
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--color-fg-muted);
+    }
+    .coming-soon svg { margin-bottom: 1rem; opacity: 0.35; }
+    .coming-soon h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--color-fg); }
+    .coming-soon p  { font-size: 0.88rem; }
+
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.78rem;
+      color: #aaa;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-white);
+    }
+
+    @media (max-width: 600px) {
+      .nav { padding: 0 1rem; }
+      .nav-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" aria-label="AMJ Produce home">
+      <img src="logo-small.webp" alt="AMJ Produce" class="nav-logo-img" />
+    </a>
+    <div class="nav-right">
+      <span class="nav-label">Market Report</span>
+      <a href="login.html" class="btn-logout">Sign Out</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <div class="page-header">
+      <p class="eyebrow">AMJ Produce — Members Area</p>
+      <h1>Market Reports</h1>
+      <p>Latest pricing, availability, and seasonal produce insights from our team.</p>
+    </div>
+
+    <div class="report-grid">
+
+      <div class="report-card">
+        <div class="report-card-top">
+          <span class="report-tag tag-weekly">Weekly</span>
+          <span class="report-date">Week of 31 Mar 2025</span>
+        </div>
+        <h3>Weekly Market Update — Week 13</h3>
+        <p>Overview of current availability, pricing movements, and featured specialty items this week.</p>
+        <a href="#" class="btn-download">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+
+      <div class="report-card">
+        <div class="report-card-top">
+          <span class="report-tag tag-weekly">Weekly</span>
+          <span class="report-date">Week of 24 Mar 2025</span>
+        </div>
+        <h3>Weekly Market Update — Week 12</h3>
+        <p>Highlights include strong citrus supply, limited stone fruit, and new season brassica arrivals.</p>
+        <a href="#" class="btn-download">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+
+      <div class="report-card">
+        <div class="report-card-top">
+          <span class="report-tag tag-monthly">Monthly</span>
+          <span class="report-date">March 2025</span>
+        </div>
+        <h3>Monthly Produce Outlook — March</h3>
+        <p>Seasonal transition report covering autumn arrivals, pricing trends, and grower updates across SA.</p>
+        <a href="#" class="btn-download">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+
+      <div class="report-card">
+        <div class="report-card-top">
+          <span class="report-tag tag-special">Special Report</span>
+          <span class="report-date">Feb 2025</span>
+        </div>
+        <h3>Edible Flowers & Micro Herb Guide</h3>
+        <p>A comprehensive seasonal guide to available edible flowers, micro herbs, and specialty garnishes.</p>
+        <a href="#" class="btn-download">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+
+    </div>
+
+    <div class="coming-soon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h2>More reports coming soon</h2>
+      <p>New weekly and monthly reports are uploaded each Monday morning. Check back regularly.</p>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; <span id="yr"></span> AMJ Produce Co. All rights reserved. &nbsp;·&nbsp; <a href="index.html" style="color:inherit;">amjproduce.com.au</a>
+  </footer>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
