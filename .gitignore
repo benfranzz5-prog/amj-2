@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+cms/node_modules/
+
+# Next.js build output
+cms/.next/
+cms/out/
+
+# Environment files
+.env
+cms/.env
+*.env.local
+
+# SQLite databases
+*.sqlite
+*.sqlite-journal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Payload generated types (regenerated on build)
+cms/src/payload-types.ts
