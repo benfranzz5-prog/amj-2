@@ -20,6 +20,27 @@
         <img src="${p.src}" alt="${p.name}" loading="lazy">
         <div class="product-photo-card-name">${p.name}</div>
       </div>`).join('')
+
+    // Apply tooltips after grid renders
+    const tooltipData = window._prodTooltips || {}
+    productGrid.querySelectorAll('.product-photo-card').forEach(card => {
+      const img = card.querySelector('img')
+      if (!img) return
+      const filename = img.src.split('/').pop()
+        .replace(/[_-]270_200_s_c1\.(jpg|jpeg|JPG|png|PNG|webp)$/i, '')
+        .replace(/_270_200_s_c1\.(jpg|jpeg|JPG|png|PNG|webp)$/i, '')
+        .replace(/\.[a-z]+$/i, '')
+      let info = tooltipData[filename]
+      if (!info) {
+        const key = Object.keys(tooltipData).find(k => img.src.includes(k))
+        if (key) info = tooltipData[key]
+      }
+      if (!info) return
+      const tip = document.createElement('div')
+      tip.className = 'product-tooltip'
+      tip.innerHTML = '<strong>' + info.name + '</strong>' + info.desc
+      card.appendChild(tip)
+    })
   }
   const data = Object.assign({}, contact, pageData)
 

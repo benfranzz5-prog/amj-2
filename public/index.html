@@ -3415,9 +3415,8 @@
 
     document.querySelectorAll('.env-stat').forEach(stat => statsObs.observe(stat));
 
-  /* ── Product gallery tooltips ── */
-  (function() {
-    const data = {
+  /* ── Product gallery tooltips — data used by cms-loader.js after grid renders ── */
+  window._prodTooltips = {
       /* ── Named products matched to image filenames ── */
       'Broccoli_purple_sprouting': { name: 'Purple Sprouting Broccoli', desc: 'Purple Sprouting Broccoli — now in great supply.' },
       'lettuce': { name: 'Salanova Miniature Lettuce', desc: 'Live trays of small heads in green and red varieties. Pull fresh heads directly before use for peak quality at plating. Pre-order required.' },
@@ -3504,25 +3503,7 @@
       'Yellow-Zucchini-4-500': { name: 'Yellow Zucchini', desc: 'Fantastic new season yellow zucchini available in excellent supply!' },
       'iStock_000032521604Small': { name: 'Yuzu Fruit', desc: 'The highly prized Japanese citrus fruit with a beautifully perfumed smell and juice. Distinctive character suited for culinary applications.' },
       'little-bunyip1': { name: 'Little Bunyip', desc: 'A rare and unusual specialty item exclusive to AMJ Produce. Subject to seasonal availability.' },
-    };
-
-    document.querySelectorAll('.product-photo-card').forEach(card => {
-      const img = card.querySelector('img');
-      if (!img) return;
-      const filename = img.src.split('/').pop().replace(/[_-]270_200_s_c1\.(jpg|jpeg|JPG|png|PNG)$/i, '').replace(/_270_200_s_c1\.(jpg|jpeg|JPG|png|PNG)$/i, '');
-      // Try exact match first, then partial
-      let info = data[filename];
-      if (!info) {
-        const key = Object.keys(data).find(k => img.src.includes(k));
-        if (key) info = data[key];
-      }
-      if (!info) return;
-      const tip = document.createElement('div');
-      tip.className = 'product-tooltip';
-      tip.innerHTML = '<strong>' + info.name + '</strong>' + info.desc;
-      card.appendChild(tip);
-    });
-  })();
+  };
 
   </script>
   <script src="/js/cms-loader.js" defer></script>
