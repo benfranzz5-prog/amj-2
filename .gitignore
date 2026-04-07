@@ -22,3 +22,4 @@ Thumbs.db
 
 # Payload generated types (regenerated on build)
 src/payload-types.ts
+package-lock.json
