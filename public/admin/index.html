@@ -3,192 +3,243 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AMJ CMS</title>
+<title>AMJ CMS Admin</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
-#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0f172a}
-#login-box{background:#1e293b;padding:2.5rem;border-radius:12px;width:340px;text-align:center}
-#login-box h1{color:#9AC92C;font-size:1.5rem;margin-bottom:.5rem}
-#login-box p{color:#94a3b8;font-size:.875rem;margin-bottom:1.5rem}
-#login-box input{width:100%;padding:.75rem 1rem;border:1px solid #334155;border-radius:8px;background:#0f172a;color:#f1f5f9;font-size:1rem;margin-bottom:1rem}
-#login-box button{width:100%;padding:.75rem;background:#9AC92C;border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
-#login-box button:hover{background:#7aaa1a}
-#login-error{color:#f87171;font-size:.875rem;margin-top:.75rem;display:none}
-#app{display:none;height:100vh;overflow:hidden}
-#sidebar{width:220px;background:#0f172a;height:100vh;display:flex;flex-direction:column;position:fixed;left:0;top:0}
-#sidebar-logo{padding:1.25rem 1rem;border-bottom:1px solid #1e293b;color:#9AC92C;font-weight:700;font-size:1rem}
-#sidebar-logo span{color:#94a3b8;font-size:.75rem;display:block;font-weight:400}
-#sidebar-nav{flex:1;overflow-y:auto;padding:.5rem 0}
-.nav-item{display:block;padding:.65rem 1.25rem;color:#94a3b8;cursor:pointer;font-size:.875rem;border-left:3px solid transparent;transition:all .15s}
-.nav-item:hover{color:#f1f5f9;background:#1e293b}
-.nav-item.active{color:#9AC92C;border-left-color:#9AC92C;background:#1e293b}
-#logout-btn{padding:1rem;color:#64748b;font-size:.8rem;cursor:pointer;border-top:1px solid #1e293b;text-align:center}
-#logout-btn:hover{color:#f87171}
-#main{margin-left:220px;height:100vh;overflow-y:auto;padding:2rem}
-#section-title{font-size:1.5rem;font-weight:700;margin-bottom:1.5rem;color:#1e293b}
-#fields-container{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.field-group{margin-bottom:1.25rem}
-.field-group label{display:block;font-size:.8rem;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
-.field-group input,.field-group textarea{width:100%;padding:.6rem .75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:.9rem;color:#1e293b;font-family:inherit}
-.field-group textarea{min-height:100px;resize:vertical}
-.field-group input:focus,.field-group textarea:focus{outline:none;border-color:#9AC92C;box-shadow:0 0 0 3px rgba(154,201,44,.15)}
-#save-bar{display:flex;align-items:center;gap:1rem;margin-top:1.5rem}
-#save-btn{padding:.65rem 2rem;background:#9AC92C;border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:600;cursor:pointer}
-#save-btn:hover{background:#7aaa1a}
-#save-btn:disabled{background:#94a3b8;cursor:not-allowed}
-#save-status{font-size:.875rem;color:#64748b}
-/* Gallery */
-#gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-top:1rem}
-.gallery-item{position:relative;border-radius:8px;overflow:hidden;background:#f8fafc;border:1px solid #e2e8f0}
-.gallery-item img{width:100%;height:130px;object-fit:cover;display:block}
-.gallery-item-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);border:none;border-radius:4px;color:#fff;width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
-#upload-area{border:2px dashed #cbd5e1;border-radius:10px;padding:2rem;text-align:center;color:#64748b;cursor:pointer;transition:border-color .2s;margin-top:1rem}
-#upload-area:hover,#upload-area.drag{border-color:#9AC92C;color:#1e293b}
-#upload-input{display:none}
-/* Site images */
-.slot-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem}
-.slot-thumb{width:100px;height:70px;object-fit:cover;border-radius:6px;background:#f1f5f9;border:1px solid #e2e8f0}
-.slot-info{flex:1}
-.slot-label{font-weight:600;font-size:.9rem;color:#1e293b}
-.slot-src{font-size:.75rem;color:#94a3b8;margin-top:.2rem;word-break:break-all}
-.slot-replace{padding:.4rem .9rem;background:#0f172a;border:none;border-radius:6px;color:#fff;font-size:.8rem;cursor:pointer}
-.slot-replace:hover{background:#1e293b}
-#img-upload-input{display:none}
+:root{
+  --bg:#0a0f1a;
+  --surface:#111827;
+  --surface2:#1f2937;
+  --border:#2d3748;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --green:#9AC92C;
+  --green-dk:#7aaa1a;
+  --green-lt:rgba(154,201,44,.12);
+  --red:#f87171;
+  --radius:10px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+/* ── LOGIN ── */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#0a0f1a 0%,#111827 100%)}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:360px;text-align:center}
+.login-logo{width:60px;height:60px;background:var(--green-lt);border:1px solid rgba(154,201,44,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.6rem}
+.login-card h1{font-size:1.4rem;font-weight:700;margin-bottom:.3rem}
+.login-card p{color:var(--muted);font-size:.85rem;margin-bottom:1.75rem}
+.login-card input{width:100%;padding:.75rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.95rem;margin-bottom:.75rem;transition:border-color .2s}
+.login-card input:focus{outline:none;border-color:var(--green)}
+.login-card button{width:100%;padding:.8rem;background:var(--green);border:none;border-radius:8px;color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .15s}
+.login-card button:hover{background:var(--green-dk)}
+#login-err{color:var(--red);font-size:.82rem;margin-top:.75rem;display:none}
+
+/* ── LAYOUT ── */
+#app{display:none;height:100vh}
+#sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;overflow:hidden}
+#main{margin-left:240px;min-height:100vh;background:var(--bg)}
+
+/* ── SIDEBAR ── */
+.sb-header{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border)}
+.sb-logo{display:flex;align-items:center;gap:.7rem}
+.sb-logo-icon{width:34px;height:34px;background:var(--green-lt);border:1px solid rgba(154,201,44,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.sb-logo-text strong{display:block;font-size:.95rem;font-weight:700;color:var(--text)}
+.sb-logo-text span{font-size:.72rem;color:var(--muted)}
+.sb-nav{flex:1;overflow-y:auto;padding:.5rem .75rem}
+.sb-group-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:.75rem .5rem .35rem}
+.nav-item{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;color:var(--muted);cursor:pointer;border-radius:7px;transition:all .15s;font-size:.85rem;margin-bottom:1px}
+.nav-item .ni-icon{width:16px;text-align:center;opacity:.7}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--green);background:var(--green-lt);font-weight:600}
+.nav-item.active .ni-icon{opacity:1}
+.sb-footer{padding:.875rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sb-footer span{font-size:.78rem;color:var(--muted)}
+#logout-btn{font-size:.78rem;color:var(--muted);cursor:pointer;padding:.3rem .6rem;border-radius:5px;transition:all .15s}
+#logout-btn:hover{color:var(--red);background:rgba(248,113,113,.1)}
+
+/* ── MAIN CONTENT ── */
+.page-header{padding:1.75rem 2rem 0;border-bottom:1px solid var(--border);margin-bottom:0}
+.page-header-inner{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:1.25rem}
+.page-title{font-size:1.35rem;font-weight:700}
+.page-subtitle{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.page-body{padding:1.75rem 2rem}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem}
+.card-header h3{font-size:.9rem;font-weight:600}
+.card-header .chip{font-size:.68rem;padding:.2rem .55rem;border-radius:20px;background:var(--green-lt);color:var(--green);font-weight:600}
+.card-body{padding:1.25rem}
+
+/* ── FIELDS ── */
+.field{margin-bottom:1.1rem}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.field input,.field textarea,.field select{width:100%;padding:.65rem .85rem;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:.875rem;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(154,201,44,.12)}
+.field textarea{min-height:85px;resize:vertical;line-height:1.6}
+.field input[type=url]{font-family:monospace;font-size:.82rem}
+.fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
+.fields-grid .field{margin-bottom:1.1rem}
+.field-hint{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+
+/* ── SAVE BAR ── */
+.save-bar{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;border-top:1px solid var(--border);background:rgba(10,15,26,.5)}
+.btn-save{padding:.6rem 1.5rem;background:var(--green);border:none;border-radius:7px;color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:.4rem}
+.btn-save:hover{background:var(--green-dk)}
+.btn-save:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+.save-status{font-size:.82rem;color:var(--muted)}
+.save-status.ok{color:var(--green)}
+.save-status.err{color:var(--red)}
+
+/* ── TESTIMONIALS ── */
+.testimonial-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.75rem}
+.testimonial-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.testimonial-item-num{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.btn-del{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:5px;color:var(--red);font-size:.75rem;padding:.25rem .6rem;cursor:pointer;transition:all .15s}
+.btn-del:hover{background:rgba(248,113,113,.2)}
+.btn-add{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;background:var(--surface2);border:1px dashed var(--border);border-radius:7px;color:var(--muted);font-size:.82rem;cursor:pointer;width:100%;transition:all .15s;margin-top:.5rem}
+.btn-add:hover{border-color:var(--green);color:var(--green)}
+.stars-select{display:flex;gap:.25rem;margin-bottom:.5rem}
+.star-btn{background:none;border:none;font-size:1.1rem;cursor:pointer;opacity:.35;transition:opacity .15s;padding:0}
+.star-btn.on{opacity:1}
+
+/* ── GALLERY ── */
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:2rem;text-align:center;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:1.25rem}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--green);color:var(--text);background:var(--green-lt)}
+.upload-zone-icon{font-size:2rem;margin-bottom:.5rem}
+.upload-zone strong{display:block;font-size:.9rem;color:var(--text);margin-bottom:.25rem}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.875rem}
+.gallery-item{position:relative;border-radius:8px;overflow:hidden;background:var(--surface2);border:1px solid var(--border);aspect-ratio:4/3}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-item-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.75);border:none;border-radius:5px;color:#fff;width:26px;height:26px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.gallery-item:hover .gallery-item-del{opacity:1}
+
+/* ── SITE IMAGES ── */
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.slot-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.slot-thumb-wrap{height:140px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.slot-thumb-wrap img{width:100%;height:100%;object-fit:cover}
+.slot-thumb-empty{color:var(--muted);font-size:.8rem;text-align:center}
+.slot-thumb-empty div{font-size:1.5rem;margin-bottom:.3rem}
+.slot-card-body{padding:.875rem}
+.slot-label{font-weight:600;font-size:.875rem;margin-bottom:.2rem}
+.slot-key{font-size:.72rem;color:var(--muted);font-family:monospace;margin-bottom:.75rem}
+.btn-replace{width:100%;padding:.5rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.8rem;cursor:pointer;transition:all .15s}
+.btn-replace:hover{border-color:var(--green);color:var(--green)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── SECTION DIVIDER ── */
+.section-divider{font-size:.72rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin:1.5rem 0 .75rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
 </style>
 </head>
 <body>
 
-<!-- Login -->
-<div id="login-screen">
-  <div id="login-box">
+<!-- ── LOGIN ── -->
+<div id="login">
+  <div class="login-card">
+    <div class="login-logo">🌿</div>
     <h1>AMJ CMS</h1>
-    <p>Enter your admin password to continue</p>
-    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password"/>
+    <p>Sign in to manage your website content</p>
+    <input type="password" id="pw" placeholder="Admin password" autocomplete="current-password"/>
     <button id="login-btn">Sign In</button>
-    <div id="login-error">Incorrect password. Please try again.</div>
+    <div id="login-err">Incorrect password. Please try again.</div>
   </div>
 </div>
 
-<!-- App -->
+<!-- ── APP ── -->
 <div id="app">
   <div id="sidebar">
-    <div id="sidebar-logo">AMJ CMS <span>Content Manager</span></div>
-    <div id="sidebar-nav">
-      <div class="nav-item active" data-section="hero">Hero</div>
-      <div class="nav-item" data-section="nav">Navigation</div>
-      <div class="nav-item" data-section="about">About</div>
-      <div class="nav-item" data-section="contact">Contact</div>
-      <div class="nav-item" data-section="footer">Footer</div>
-      <div class="nav-item" data-section="gallery">📷 Gallery</div>
-      <div class="nav-item" data-section="images">🖼 Site Images</div>
+    <div class="sb-header">
+      <div class="sb-logo">
+        <div class="sb-logo-icon">🌿</div>
+        <div class="sb-logo-text">
+          <strong>AMJ CMS</strong>
+          <span>Content Manager</span>
+        </div>
+      </div>
     </div>
-    <div id="logout-btn">Sign out</div>
+
+    <div class="sb-nav">
+      <div class="sb-group-label">Website Content</div>
+      <div class="nav-item active" data-section="hero"><span class="ni-icon">🏠</span> Hero</div>
+      <div class="nav-item" data-section="nav"><span class="ni-icon">☰</span> Navigation</div>
+      <div class="nav-item" data-section="about"><span class="ni-icon">👥</span> About</div>
+      <div class="nav-item" data-section="fresho"><span class="ni-icon">🛒</span> Fresho / Ordering</div>
+      <div class="nav-item" data-section="delivery"><span class="ni-icon">🚚</span> Delivery</div>
+      <div class="nav-item" data-section="mission"><span class="ni-icon">🎯</span> Mission & Vision</div>
+      <div class="nav-item" data-section="testimonials"><span class="ni-icon">⭐</span> Testimonials</div>
+      <div class="nav-item" data-section="environment"><span class="ni-icon">🌱</span> Environment</div>
+      <div class="nav-item" data-section="commitment"><span class="ni-icon">🤝</span> Commitment</div>
+      <div class="nav-item" data-section="contact"><span class="ni-icon">📞</span> Contact</div>
+      <div class="nav-item" data-section="footer"><span class="ni-icon">📄</span> Footer</div>
+
+      <div class="sb-group-label">Media</div>
+      <div class="nav-item" data-section="gallery"><span class="ni-icon">📷</span> Gallery</div>
+      <div class="nav-item" data-section="images"><span class="ni-icon">🖼</span> Site Images</div>
+    </div>
+
+    <div class="sb-footer">
+      <span id="sb-site-link">amj-2.vercel.app</span>
+      <span id="logout-btn">Sign out</span>
+    </div>
   </div>
+
   <div id="main">
-    <div id="section-title">Hero</div>
-    <div id="fields-container"></div>
+    <div id="page-content"></div>
   </div>
 </div>
 
+<input type="file" id="gallery-file-input" multiple accept="image/*" style="display:none"/>
+<input type="file" id="image-slot-input" accept="image/*" style="display:none"/>
+
 <script>
-// ── Schemas ─────────────────────────────────────────────────────────
-const SCHEMAS = {
-  hero: [
-    { key:'eyebrow', label:'Eyebrow text', type:'text' },
-    { key:'titleLine1', label:'Title line 1', type:'text' },
-    { key:'titleLine2', label:'Title line 2', type:'text' },
-    { key:'sub', label:'Sub-paragraph', type:'textarea' },
-    { key:'ctaPrimary', label:'Primary CTA label', type:'text' },
-    { key:'ctaOutline', label:'Outline CTA label', type:'text' },
-  ],
-  nav: [
-    { key:'wholesale', label:'Wholesale', type:'text' },
-    { key:'aboutAmj', label:'About AMJ', type:'text' },
-    { key:'products', label:'Products', type:'text' },
-    { key:'media', label:'Media', type:'text' },
-    { key:'environment', label:'Environment', type:'text' },
-    { key:'contact', label:'Contact', type:'text' },
-    { key:'marketReport', label:'Market Report', type:'text' },
-  ],
-  about: [
-    { key:'sectionLabel', label:'Section label', type:'text' },
-    { key:'heading', label:'Heading', type:'text' },
-    { key:'leadParagraph', label:'Lead paragraph', type:'textarea' },
-    { key:'body1', label:'Body paragraph 1', type:'textarea' },
-    { key:'body2', label:'Body paragraph 2', type:'textarea' },
-    { key:'body3', label:'Body paragraph 3', type:'textarea' },
-    { key:'ctaLabel', label:'CTA label', type:'text' },
-  ],
-  contact: [
-    { key:'persons', label:'Contact persons', type:'text' },
-    { key:'addressStreet', label:'Street address', type:'text' },
-    { key:'addressCity', label:'City/State', type:'text' },
-    { key:'addressGPO', label:'GPO address', type:'text' },
-    { key:'phone', label:'Phone', type:'text' },
-    { key:'fax', label:'Fax', type:'text' },
-    { key:'email', label:'Email', type:'text' },
-    { key:'formNote', label:'Form note', type:'textarea' },
-  ],
-  footer: [
-    { key:'companyName', label:'Company name', type:'text' },
-    { key:'companySubtitle', label:'Subtitle', type:'text' },
-    { key:'addressStreet', label:'Address', type:'text' },
-    { key:'phone', label:'Phone', type:'text' },
-    { key:'fax', label:'Fax', type:'text' },
-    { key:'email', label:'Email', type:'text' },
-    { key:'commitmentParagraph', label:'Commitment paragraph', type:'textarea' },
-    { key:'designerLabel', label:'Designer label', type:'text' },
-    { key:'designerUrl', label:'Designer URL', type:'text' },
-  ],
-}
-
-const SECTION_LABELS = {
-  hero:'Hero', nav:'Navigation', about:'About', contact:'Contact',
-  footer:'Footer', gallery:'Gallery', images:'Site Images',
-}
-
+// ── State ────────────────────────────────────────────────────────────
 let currentSection = 'hero'
 let currentData = {}
-let currentSha = null
 let pendingSlot = null
 
-// ── Login ────────────────────────────────────────────────────────────
-document.getElementById('login-btn').onclick = doLogin
-document.getElementById('password-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin() })
-
-async function doLogin() {
-  const pw = document.getElementById('password-input').value
-  const err = document.getElementById('login-error')
-  err.style.display = 'none'
-  const r = await fetch('/api/admin-login', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ password: pw }), credentials:'include'
-  })
-  if (r.ok) {
-    document.getElementById('login-screen').style.display = 'none'
-    document.getElementById('app').style.display = 'flex'
-    loadSection('hero')
-  } else {
-    err.style.display = 'block'
-  }
+const LABELS = {
+  hero:'Hero', nav:'Navigation', about:'About', fresho:'Fresho / Ordering',
+  delivery:'Delivery', mission:'Mission & Vision', testimonials:'Testimonials',
+  environment:'Environment', commitment:'Commitment', contact:'Contact',
+  footer:'Footer', gallery:'Gallery', images:'Site Images'
 }
 
-// Check existing session on load
-fetch('/api/admin-auth-check', { credentials:'include' }).then(r => {
-  if (r.ok) {
-    document.getElementById('login-screen').style.display = 'none'
-    document.getElementById('app').style.display = 'flex'
-    loadSection('hero')
-  }
+// ── Auth ─────────────────────────────────────────────────────────────
+document.getElementById('login-btn').onclick = login
+document.getElementById('pw').addEventListener('keydown', e => e.key === 'Enter' && login())
+
+async function login() {
+  const pw = document.getElementById('pw').value
+  const err = document.getElementById('login-err')
+  err.style.display = 'none'
+  const r = await fetch('/api/admin-login', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({password: pw}), credentials: 'include'
+  })
+  if (r.ok) { showApp(); loadSection('hero') }
+  else err.style.display = 'block'
+}
+
+fetch('/api/admin-auth-check', {credentials:'include'}).then(r => {
+  if (r.ok) { showApp(); loadSection('hero') }
 })
+
+function showApp() {
+  document.getElementById('login').style.display = 'none'
+  document.getElementById('app').style.display = 'flex'
+}
 
 document.getElementById('logout-btn').onclick = () => {
   document.cookie = 'amj_session=; Max-Age=0; Path=/'
   location.reload()
 }
 
-// ── Nav ──────────────────────────────────────────────────────────────
+// ── Navigation ───────────────────────────────────────────────────────
 document.querySelectorAll('.nav-item').forEach(el => {
   el.onclick = () => {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'))
@@ -197,118 +248,499 @@ document.querySelectorAll('.nav-item').forEach(el => {
   }
 })
 
-// ── Load section ─────────────────────────────────────────────────────
+// ── Section loader ───────────────────────────────────────────────────
 async function loadSection(section) {
   currentSection = section
-  document.getElementById('section-title').textContent = SECTION_LABELS[section] || section
-  const container = document.getElementById('fields-container')
-
   if (section === 'gallery') { renderGallery(); return }
   if (section === 'images') { renderImages(); return }
+  if (section === 'testimonials') { renderTestimonials(); return }
 
-  container.innerHTML = '<p style="color:#94a3b8">Loading…</p>'
+  const pc = document.getElementById('page-content')
+  pc.innerHTML = `<div class="page-header"><div class="page-header-inner"><div><div class="page-title">${LABELS[section]}</div><div class="page-subtitle">Edit content for the ${LABELS[section]} section</div></div></div></div><div class="page-body"><div class="card"><div class="card-body" style="padding:2rem;color:var(--muted)">Loading…</div></div></div>`
+
   try {
-    const r = await fetch(`/api/admin-content?section=${section}`, { credentials:'include' })
+    const r = await fetch(`/api/admin-content?section=${section}`, {credentials:'include'})
     if (!r.ok) throw new Error(await r.text())
-    const { content, sha } = await r.json()
+    const {content} = await r.json()
     currentData = content
-    currentSha = sha
     renderFields(section, content)
   } catch(e) {
-    container.innerHTML = `<p style="color:#f87171">Error: ${e.message}</p>`
+    document.getElementById('page-content').innerHTML = `<div class="page-body"><div class="card"><div class="card-body" style="color:var(--red)">Error: ${e.message}</div></div></div>`
   }
 }
 
-function renderFields(section, data) {
-  const schema = SCHEMAS[section] || []
-  const container = document.getElementById('fields-container')
-  container.innerHTML = ''
+// ── Field schemas ────────────────────────────────────────────────────
+const SCHEMAS = {
+  hero: {
+    _title: 'Hero Section',
+    fields: [
+      {k:'eyebrow', l:'Eyebrow text', t:'text'},
+      {k:'titleLine1', l:'Title line 1', t:'text'},
+      {k:'titleLine2', l:'Title line 2 (italic)', t:'text'},
+      {k:'sub', l:'Sub-paragraph', t:'textarea'},
+      {k:'ctaPrimary', l:'Primary button label', t:'text', half:true},
+      {k:'ctaPrimaryHref', l:'Primary button link', t:'url', half:true},
+      {k:'ctaOutline', l:'Outline button label', t:'text', half:true},
+      {k:'ctaOutlineHref', l:'Outline button link', t:'url', half:true},
+    ]
+  },
+  nav: {
+    _title: 'Navigation Labels',
+    fields: [
+      {k:'wholesale', l:'Wholesale', t:'text', half:true},
+      {k:'aboutAmj', l:'About AMJ', t:'text', half:true},
+      {k:'products', l:'Products', t:'text', half:true},
+      {k:'media', l:'Media', t:'text', half:true},
+      {k:'environment', l:'Environment', t:'text', half:true},
+      {k:'contact', l:'Contact', t:'text', half:true},
+      {k:'marketReport', l:'Market Report', t:'text', half:true},
+    ]
+  },
+  about: {
+    _title: 'About Section',
+    groups: [
+      {label:'Header', fields:[
+        {k:'sectionLabel', l:'Section label', t:'text', half:true},
+        {k:'heading', l:'Heading', t:'text'},
+        {k:'leadParagraph', l:'Lead paragraph', t:'textarea'},
+        {k:'body1', l:'Body paragraph 1', t:'textarea'},
+        {k:'body2', l:'Body paragraph 2', t:'textarea'},
+        {k:'body3', l:'Body paragraph 3', t:'textarea'},
+        {k:'ctaLabel', l:'CTA button label', t:'text', half:true},
+      ]},
+      {label:'Awards & Certifications', fields:[
+        {k:'award1', l:'Award / cert 1', t:'text'},
+        {k:'award2', l:'Award / cert 2', t:'text'},
+        {k:'award3', l:'Award / cert 3', t:'text'},
+      ]},
+      {label:'Pillars', fields:[
+        {k:'pillar1Title', l:'Pillar 1 title', t:'text', half:true},
+        {k:'pillar1Desc', l:'Pillar 1 description', t:'textarea'},
+        {k:'pillar2Title', l:'Pillar 2 title', t:'text', half:true},
+        {k:'pillar2Desc', l:'Pillar 2 description', t:'textarea'},
+        {k:'pillar3Title', l:'Pillar 3 title', t:'text', half:true},
+        {k:'pillar3Desc', l:'Pillar 3 description', t:'textarea'},
+        {k:'pillar4Title', l:'Pillar 4 title', t:'text', half:true},
+        {k:'pillar4Desc', l:'Pillar 4 description', t:'textarea'},
+      ]}
+    ]
+  },
+  fresho: {
+    _title: 'Fresho / Online Ordering',
+    fields: [
+      {k:'sectionLabel', l:'Section label', t:'text', half:true},
+      {k:'heading', l:'Heading', t:'text'},
+      {k:'body', l:'Body text', t:'textarea'},
+      {k:'buttonLabel', l:'Button label', t:'text', half:true},
+      {k:'buttonUrl', l:'Button URL', t:'url', half:true},
+    ]
+  },
+  delivery: {
+    _title: 'Delivery Section',
+    fields: [
+      {k:'sectionLabel', l:'Section label', t:'text', half:true},
+      {k:'heading', l:'Heading', t:'text'},
+      {k:'lead', l:'Lead paragraph', t:'textarea'},
+      {k:'bullet1', l:'Bullet point 1', t:'text'},
+      {k:'bullet2', l:'Bullet point 2', t:'text'},
+      {k:'bullet3', l:'Bullet point 3', t:'text'},
+      {k:'bullet4', l:'Bullet point 4', t:'text'},
+      {k:'bullet5', l:'Bullet point 5', t:'text'},
+    ]
+  },
+  mission: {
+    _title: 'Mission & Vision',
+    groups: [
+      {label:'Mission', fields:[
+        {k:'missionHeading', l:'Mission heading', t:'text'},
+        {k:'missionIntro', l:'Mission intro', t:'textarea'},
+        {k:'missionItem1', l:'Mission item 1', t:'text'},
+        {k:'missionItem2', l:'Mission item 2', t:'text'},
+        {k:'missionItem3', l:'Mission item 3', t:'text'},
+        {k:'missionItem4', l:'Mission item 4', t:'text'},
+        {k:'missionItem5', l:'Mission item 5', t:'text'},
+        {k:'missionItem6', l:'Mission item 6', t:'text'},
+        {k:'missionItem7', l:'Mission item 7', t:'text'},
+      ]},
+      {label:'Vision', fields:[
+        {k:'visionHeading', l:'Vision heading', t:'text'},
+        {k:'visionBody', l:'Vision body', t:'textarea'},
+        {k:'principle1', l:'Principle 1', t:'text', half:true},
+        {k:'principle2', l:'Principle 2', t:'text', half:true},
+        {k:'principle3', l:'Principle 3', t:'text', half:true},
+        {k:'principle4', l:'Principle 4', t:'text', half:true},
+        {k:'principle5', l:'Principle 5', t:'text', half:true},
+        {k:'principle6', l:'Principle 6', t:'text', half:true},
+        {k:'principle7', l:'Principle 7', t:'text', half:true},
+        {k:'principle8', l:'Principle 8', t:'text', half:true},
+      ]}
+    ]
+  },
+  environment: {
+    _title: 'Environment / Sustainability',
+    groups: [
+      {label:'Header', fields:[
+        {k:'sectionLabel', l:'Section label', t:'text', half:true},
+        {k:'heading', l:'Heading', t:'text'},
+        {k:'lead', l:'Lead paragraph', t:'textarea'},
+      ]},
+      {label:'Cards', fields:[
+        {k:'card1Title', l:'Card 1 title', t:'text', half:true},
+        {k:'card1Body', l:'Card 1 body', t:'textarea'},
+        {k:'card2Title', l:'Card 2 title', t:'text', half:true},
+        {k:'card2Body', l:'Card 2 body', t:'textarea'},
+        {k:'card3Title', l:'Card 3 title', t:'text', half:true},
+        {k:'card3Body', l:'Card 3 body', t:'textarea'},
+        {k:'card4Title', l:'Card 4 title', t:'text', half:true},
+        {k:'card4Body', l:'Card 4 body', t:'textarea'},
+        {k:'card5Title', l:'Card 5 title', t:'text', half:true},
+        {k:'card5Body', l:'Card 5 body', t:'textarea'},
+        {k:'card6Title', l:'Card 6 title', t:'text', half:true},
+        {k:'card6Body', l:'Card 6 body', t:'textarea'},
+      ]},
+      {label:'Stats', fields:[
+        {k:'stat1Num', l:'Stat 1 number', t:'text', half:true},
+        {k:'stat1Label', l:'Stat 1 label', t:'text', half:true},
+        {k:'stat2Num', l:'Stat 2 number', t:'text', half:true},
+        {k:'stat2Label', l:'Stat 2 label', t:'text', half:true},
+        {k:'stat3Num', l:'Stat 3 number', t:'text', half:true},
+        {k:'stat3Label', l:'Stat 3 label', t:'text', half:true},
+      ]}
+    ]
+  },
+  commitment: {
+    _title: 'Customer Commitment',
+    groups: [
+      {label:'Content', fields:[
+        {k:'heading', l:'Heading', t:'text'},
+        {k:'body1', l:'Paragraph 1', t:'textarea'},
+        {k:'body2', l:'Paragraph 2', t:'textarea'},
+      ]},
+      {label:'Value Pills', fields:[
+        {k:'value1', l:'Value 1', t:'text', half:true},
+        {k:'value2', l:'Value 2', t:'text', half:true},
+        {k:'value3', l:'Value 3', t:'text', half:true},
+        {k:'value4', l:'Value 4', t:'text', half:true},
+        {k:'value5', l:'Value 5', t:'text', half:true},
+        {k:'value6', l:'Value 6', t:'text', half:true},
+      ]}
+    ]
+  },
+  contact: {
+    _title: 'Contact Section',
+    groups: [
+      {label:'Header', fields:[
+        {k:'sectionLabel', l:'Section label', t:'text', half:true},
+        {k:'heading', l:'Heading', t:'text'},
+        {k:'sub', l:'Sub-paragraph', t:'textarea'},
+      ]},
+      {label:'Contact Details', fields:[
+        {k:'persons', l:'Contact persons', t:'text'},
+        {k:'addressStreet', l:'Street address', t:'text'},
+        {k:'addressCity', l:'City/State', t:'text', half:true},
+        {k:'addressGPO', l:'GPO address', t:'text', half:true},
+        {k:'phone', l:'Phone', t:'text', half:true},
+        {k:'fax', l:'Fax', t:'text', half:true},
+        {k:'email', l:'Email', t:'text'},
+        {k:'formNote', l:'Form note', t:'textarea'},
+      ]}
+    ]
+  },
+  footer: {
+    _title: 'Footer',
+    fields: [
+      {k:'companyName', l:'Company name', t:'text', half:true},
+      {k:'companySubtitle', l:'Company subtitle', t:'text', half:true},
+      {k:'addressStreet', l:'Address', t:'text'},
+      {k:'phone', l:'Phone', t:'text', half:true},
+      {k:'fax', l:'Fax', t:'text', half:true},
+      {k:'email', l:'Email', t:'text'},
+      {k:'commitmentParagraph', l:'Commitment paragraph', t:'textarea'},
+      {k:'designerLabel', l:'Designer credit label', t:'text', half:true},
+      {k:'designerUrl', l:'Designer credit URL', t:'url', half:true},
+    ]
+  },
+}
 
-  schema.forEach(f => {
-    const g = document.createElement('div')
-    g.className = 'field-group'
-    const lbl = document.createElement('label')
-    lbl.textContent = f.label
-    g.appendChild(lbl)
-    const inp = f.type === 'textarea' ? document.createElement('textarea') : document.createElement('input')
-    if (f.type === 'text') inp.type = 'text'
-    inp.value = data[f.key] || ''
-    inp.dataset.key = f.key
-    inp.addEventListener('input', () => { currentData[f.key] = inp.value })
-    g.appendChild(inp)
-    container.appendChild(g)
+function renderFields(section, data) {
+  const schema = SCHEMAS[section]
+  if (!schema) return
+
+  const groups = schema.groups || [{label: null, fields: schema.fields}]
+  let html = `
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div>
+          <div class="page-title">${LABELS[section]}</div>
+          <div class="page-subtitle">Edit content for the ${LABELS[section]} section</div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+  `
+
+  groups.forEach(group => {
+    html += `<div class="card" style="margin-bottom:1.25rem">`
+    if (group.label) html += `<div class="card-header"><h3>${group.label}</h3></div>`
+    html += `<div class="card-body">`
+
+    // Pair up half fields
+    let i = 0
+    while (i < group.fields.length) {
+      const f = group.fields[i]
+      if (f.half && i + 1 < group.fields.length && group.fields[i+1].half) {
+        const f2 = group.fields[i+1]
+        html += `<div class="fields-grid">${fieldHtml(f, data)}${fieldHtml(f2, data)}</div>`
+        i += 2
+      } else {
+        html += fieldHtml(f, data)
+        i++
+      }
+    }
+
+    html += `</div><div class="save-bar">
+      <button class="btn-save" onclick="saveSection()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Changes
+      </button>
+      <span class="save-status" id="save-status"></span>
+    </div></div>`
   })
 
-  const bar = document.createElement('div')
-  bar.id = 'save-bar'
-  bar.innerHTML = '<button id="save-btn">Save Changes</button><span id="save-status"></span>'
-  container.appendChild(bar)
-  document.getElementById('save-btn').onclick = saveSection
+  html += `</div>`
+  document.getElementById('page-content').innerHTML = html
+
+  // Wire up inputs
+  document.querySelectorAll('[data-field]').forEach(el => {
+    el.addEventListener('input', () => { currentData[el.dataset.field] = el.value })
+  })
+}
+
+function fieldHtml(f, data) {
+  const val = (data[f.k] || '').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+  const tag = f.t === 'textarea' ? 'textarea' : 'input'
+  const attrs = `data-field="${f.k}" class="field ${f.half ? 'field-half' : ''}"`
+  if (f.t === 'textarea') {
+    return `<div class="field"><label>${f.l}</label><textarea ${attrs}>${val}</textarea></div>`
+  }
+  return `<div class="field"><label>${f.l}</label><input type="${f.t === 'url' ? 'url' : 'text'}" ${attrs} value="${val}"/></div>`
 }
 
 async function saveSection() {
-  const btn = document.getElementById('save-btn')
+  const btn = document.querySelector('.btn-save')
   const status = document.getElementById('save-status')
+  if (!btn || !status) return
   btn.disabled = true
   status.textContent = 'Saving…'
+  status.className = 'save-status'
   try {
     const r = await fetch('/api/admin-save', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ section: currentSection, content: currentData }),
-      credentials:'include'
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({section: currentSection, content: currentData}),
+      credentials: 'include'
     })
     if (!r.ok) throw new Error(await r.text())
-    status.textContent = '✓ Saved'
-    setTimeout(() => { status.textContent = '' }, 3000)
+    status.textContent = '✓ Saved successfully'
+    status.className = 'save-status ok'
+    setTimeout(() => { status.textContent = ''; status.className = 'save-status' }, 3000)
   } catch(e) {
-    status.textContent = `Error: ${e.message}`
+    status.textContent = 'Error: ' + e.message
+    status.className = 'save-status err'
   } finally {
     btn.disabled = false
   }
 }
 
+// ── Testimonials ─────────────────────────────────────────────────────
+async function renderTestimonials() {
+  const pc = document.getElementById('page-content')
+  pc.innerHTML = `<div class="page-header"><div class="page-header-inner"><div><div class="page-title">Testimonials</div><div class="page-subtitle">Add, edit or remove customer reviews</div></div></div></div><div class="page-body"><div class="card"><div class="card-body" style="color:var(--muted)">Loading…</div></div></div>`
+
+  let data = []
+  try {
+    const r = await fetch('/api/admin-content?section=testimonials', {credentials:'include'})
+    if (r.ok) { const j = await r.json(); data = Array.isArray(j.content) ? j.content : [] }
+  } catch {}
+
+  renderTestimonialsUI(data)
+}
+
+function renderTestimonialsUI(data) {
+  const pc = document.getElementById('page-content')
+  let html = `
+    <div class="page-header"><div class="page-header-inner"><div><div class="page-title">Testimonials</div><div class="page-subtitle">Add, edit or remove customer reviews</div></div></div></div>
+    <div class="page-body">
+      <div class="card">
+        <div class="card-header"><h3>Customer Reviews</h3><span class="chip">${data.length} reviews</span></div>
+        <div class="card-body" id="testimonials-list">
+  `
+
+  data.forEach((t, i) => {
+    html += testimonialItemHtml(t, i)
+  })
+
+  html += `</div>
+        <div style="padding:0 1.25rem .75rem">
+          <button class="btn-add" onclick="addTestimonial()">+ Add testimonial</button>
+        </div>
+        <div class="save-bar">
+          <button class="btn-save" onclick="saveTestimonials()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Changes
+          </button>
+          <span class="save-status" id="save-status"></span>
+        </div>
+      </div>
+    </div>
+  `
+  pc.innerHTML = html
+}
+
+function testimonialItemHtml(t, i) {
+  const stars = t.stars || 5
+  const starBtns = [1,2,3,4,5].map(n =>
+    `<button class="star-btn ${n <= stars ? 'on' : ''}" onclick="setStar(${i},${n})" title="${n} stars">★</button>`
+  ).join('')
+  return `
+    <div class="testimonial-item" id="t-item-${i}">
+      <div class="testimonial-item-header">
+        <span class="testimonial-item-num">Review ${i+1}</span>
+        <button class="btn-del" onclick="deleteTestimonial(${i})">Remove</button>
+      </div>
+      <div class="field"><label>Quote</label><textarea data-t="${i}" data-f="quote" rows="3" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-family:inherit;font-size:.875rem;resize:vertical">${(t.quote||'').replace(/</g,'&lt;')}</textarea></div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:end">
+        <div class="field" style="margin:0"><label>Author name</label><input type="text" data-t="${i}" data-f="author" value="${(t.author||'').replace(/"/g,'&quot;')}" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;color:var(--text);font-size:.875rem"/></div>
+        <div class="field" style="margin:0"><label>Stars</label><div class="stars-select" id="stars-${i}">${starBtns}</div></div>
+      </div>
+    </div>
+  `
+}
+
+let testimonialsData = []
+
+function setStar(idx, n) {
+  if (!testimonialsData[idx]) testimonialsData[idx] = {}
+  testimonialsData[idx].stars = n
+  const container = document.getElementById(`stars-${idx}`)
+  if (container) {
+    container.querySelectorAll('.star-btn').forEach((b, i) => {
+      b.classList.toggle('on', i < n)
+    })
+  }
+}
+
+function collectTestimonials() {
+  const items = document.querySelectorAll('.testimonial-item')
+  return Array.from(items).map((item, i) => {
+    const quote = item.querySelector(`[data-f="quote"]`)?.value || ''
+    const author = item.querySelector(`[data-f="author"]`)?.value || ''
+    const stars = (testimonialsData[i]?.stars) || item.querySelectorAll('.star-btn.on').length || 5
+    return {quote, author, stars}
+  })
+}
+
+function addTestimonial() {
+  const list = document.getElementById('testimonials-list')
+  const items = list.querySelectorAll('.testimonial-item')
+  const i = items.length
+  const div = document.createElement('div')
+  div.innerHTML = testimonialItemHtml({quote:'', author:'', stars:5}, i)
+  list.appendChild(div.firstElementChild)
+}
+
+function deleteTestimonial(i) {
+  const el = document.getElementById(`t-item-${i}`)
+  if (el) el.remove()
+  // Re-number
+  document.querySelectorAll('.testimonial-item').forEach((el, i) => {
+    el.id = `t-item-${i}`
+    const num = el.querySelector('.testimonial-item-num')
+    if (num) num.textContent = `Review ${i+1}`
+    el.querySelectorAll('[data-t]').forEach(f => f.setAttribute('data-t', i))
+    el.querySelectorAll('.star-btn').forEach(b => {
+      const onclick = b.getAttribute('onclick')
+      if (onclick) b.setAttribute('onclick', onclick.replace(/setStar\(\d+,/, `setStar(${i},`))
+    })
+    el.querySelector('.btn-del')?.setAttribute('onclick', `deleteTestimonial(${i})`)
+    const starsEl = el.querySelector('[id^="stars-"]')
+    if (starsEl) starsEl.id = `stars-${i}`
+  })
+}
+
+async function saveTestimonials() {
+  const btn = document.querySelector('.btn-save')
+  const status = document.getElementById('save-status')
+  btn.disabled = true
+  status.textContent = 'Saving…'
+  status.className = 'save-status'
+  try {
+    const content = collectTestimonials()
+    const r = await fetch('/api/admin-save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({section:'testimonials', content}), credentials:'include'
+    })
+    if (!r.ok) throw new Error(await r.text())
+    status.textContent = '✓ Saved'
+    status.className = 'save-status ok'
+    setTimeout(() => { status.textContent = ''; status.className = 'save-status' }, 3000)
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message
+    status.className = 'save-status err'
+  } finally { btn.disabled = false }
+}
+
 // ── Gallery ──────────────────────────────────────────────────────────
 async function renderGallery() {
-  const container = document.getElementById('fields-container')
-  container.innerHTML = '<p style="color:#94a3b8">Loading gallery…</p>'
+  const pc = document.getElementById('page-content')
+  pc.innerHTML = `<div class="page-header"><div class="page-header-inner"><div><div class="page-title">Gallery</div><div class="page-subtitle">Upload and manage gallery photos</div></div></div></div><div class="page-body"><div class="card"><div class="card-body" style="color:var(--muted)">Loading…</div></div></div>`
 
   let gallery = []
   try {
-    const r = await fetch(`/api/admin-content?section=gallery`, { credentials:'include' })
-    if (r.ok) {
-      const { content } = await r.json()
-      gallery = Array.isArray(content) ? content : []
-    }
+    const r = await fetch('/api/admin-content?section=gallery', {credentials:'include'})
+    if (r.ok) { const j = await r.json(); gallery = Array.isArray(j.content) ? j.content : [] }
   } catch {}
 
-  container.innerHTML = `
-    <div id="upload-area">
-      <div style="font-size:2rem">📤</div>
-      <div style="margin-top:.5rem;font-weight:600">Drop images here or click to upload</div>
-      <div style="font-size:.8rem;margin-top:.25rem">JPEG, PNG, WebP — max 10 MB each</div>
-      <input type="file" id="upload-input" multiple accept="image/*"/>
+  pc.innerHTML = `
+    <div class="page-header"><div class="page-header-inner"><div><div class="page-title">Gallery</div><div class="page-subtitle">Upload and manage gallery photos</div></div></div></div>
+    <div class="page-body">
+      <div class="card" style="margin-bottom:1.25rem">
+        <div class="card-header"><h3>Upload Photos</h3></div>
+        <div class="card-body">
+          <div class="upload-zone" id="upload-zone">
+            <div class="upload-zone-icon">📤</div>
+            <strong>Drop images here or click to upload</strong>
+            <div style="font-size:.78rem;margin-top:.25rem">JPEG, PNG, WebP · Max 10 MB · Auto-compressed to 1920px</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Photos</h3><span class="chip">${gallery.length} photos</span></div>
+        <div class="card-body">
+          <div class="gallery-grid" id="gallery-grid"></div>
+        </div>
+      </div>
     </div>
-    <div id="gallery-grid"></div>
   `
 
   renderGalleryGrid(gallery)
 
-  const area = document.getElementById('upload-area')
-  const inp = document.getElementById('upload-input')
-  area.onclick = () => inp.click()
-  area.ondragover = e => { e.preventDefault(); area.classList.add('drag') }
-  area.ondragleave = () => area.classList.remove('drag')
-  area.ondrop = e => { e.preventDefault(); area.classList.remove('drag'); handleFiles(e.dataTransfer.files) }
-  inp.onchange = () => handleFiles(inp.files)
+  const zone = document.getElementById('upload-zone')
+  const inp = document.getElementById('gallery-file-input')
+  zone.onclick = () => inp.click()
+  zone.ondragover = e => { e.preventDefault(); zone.classList.add('drag') }
+  zone.ondragleave = () => zone.classList.remove('drag')
+  zone.ondrop = e => { e.preventDefault(); zone.classList.remove('drag'); handleFiles(e.dataTransfer.files) }
+  inp.onchange = () => { handleFiles(inp.files); inp.value = '' }
 }
 
 function renderGalleryGrid(gallery) {
   const grid = document.getElementById('gallery-grid')
-  grid.innerHTML = ''
+  if (!grid) return
+  grid.innerHTML = gallery.length ? '' : '<div style="color:var(--muted);font-size:.85rem">No photos yet. Upload some above.</div>'
   gallery.forEach(item => {
     const div = document.createElement('div')
     div.className = 'gallery-item'
-    div.innerHTML = `<img src="/${item.src}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22130%22><rect fill=%22%23f1f5f9%22 width=%22160%22 height=%22130%22/></svg>'"/><button class="gallery-item-del" title="Delete">✕</button>`
+    div.innerHTML = `<img src="/${item.src}" loading="lazy"/><button class="gallery-item-del" title="Delete photo">✕</button>`
     div.querySelector('.gallery-item-del').onclick = () => deletePhoto(item.src, div)
     grid.appendChild(div)
   })
@@ -319,13 +751,15 @@ async function handleFiles(files) {
     const compressed = await compressImage(file)
     const fd = new FormData()
     fd.append('file', compressed, file.name)
-    const r = await fetch('/api/admin-upload', { method:'POST', body: fd, credentials:'include' })
+    const r = await fetch('/api/admin-upload', {method:'POST', body:fd, credentials:'include'})
     if (r.ok) {
-      const { src } = await r.json()
+      const {src} = await r.json()
       const grid = document.getElementById('gallery-grid')
+      const noPhotos = grid.querySelector('div')
+      if (noPhotos && !noPhotos.className) noPhotos.remove()
       const div = document.createElement('div')
       div.className = 'gallery-item'
-      div.innerHTML = `<img src="/${src}" loading="lazy"/><button class="gallery-item-del" title="Delete">✕</button>`
+      div.innerHTML = `<img src="/${src}"/><button class="gallery-item-del" title="Delete">✕</button>`
       div.querySelector('.gallery-item-del').onclick = () => deletePhoto(src, div)
       grid.prepend(div)
     }
@@ -336,7 +770,7 @@ async function deletePhoto(src, el) {
   if (!confirm('Delete this photo?')) return
   const r = await fetch('/api/admin-delete-photo', {
     method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ src }), credentials:'include'
+    body:JSON.stringify({src}), credentials:'include'
   })
   if (r.ok) el.remove()
 }
@@ -362,57 +796,67 @@ function compressImage(file) {
 
 // ── Site Images ──────────────────────────────────────────────────────
 async function renderImages() {
-  const container = document.getElementById('fields-container')
-  container.innerHTML = '<p style="color:#94a3b8">Loading…</p>'
+  const pc = document.getElementById('page-content')
+  pc.innerHTML = `<div class="page-header"><div class="page-header-inner"><div><div class="page-title">Site Images</div><div class="page-subtitle">Replace named image slots used across the site</div></div></div></div><div class="page-body"><div class="card"><div class="card-body" style="color:var(--muted)">Loading…</div></div></div>`
 
   let images = {}
   try {
-    const r = await fetch(`/api/admin-content?section=images`, { credentials:'include' })
-    if (r.ok) { const { content } = await r.json(); images = content || {} }
+    const r = await fetch('/api/admin-content?section=images', {credentials:'include'})
+    if (r.ok) { const j = await r.json(); images = j.content || {} }
   } catch {}
 
-  container.innerHTML = '<input type="file" id="img-upload-input" accept="image/*"/>'
   const slots = Object.entries(images)
-  if (!slots.length) {
-    container.innerHTML += '<p style="color:#94a3b8;margin-top:1rem">No image slots configured.</p>'
-    return
-  }
+  let html = `
+    <div class="page-header"><div class="page-header-inner"><div><div class="page-title">Site Images</div><div class="page-subtitle">Replace named image slots used across the site</div></div></div></div>
+    <div class="page-body">
+      <div class="card">
+        <div class="card-header"><h3>Image Slots</h3><span class="chip">${slots.length} slots</span></div>
+        <div class="card-body">
+          <div class="slot-grid">
+  `
 
   slots.forEach(([slot, info]) => {
-    const card = document.createElement('div')
-    card.className = 'slot-card'
-    card.innerHTML = `
-      <img class="slot-thumb" src="${info.src ? '/' + info.src : ''}" onerror="this.src=''" alt="${info.label || slot}"/>
-      <div class="slot-info">
-        <div class="slot-label">${info.label || slot}</div>
-        <div class="slot-src">${info.src || 'No image set'}</div>
+    const hasSrc = info.src && info.src.length > 0
+    html += `
+      <div class="slot-card">
+        <div class="slot-thumb-wrap">
+          ${hasSrc
+            ? `<img src="/${info.src}" alt="${info.label||slot}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="slot-thumb-empty" style="display:none"><div>🖼</div>Image not found</div>`
+            : `<div class="slot-thumb-empty"><div>🖼</div>No image set</div>`}
+        </div>
+        <div class="slot-card-body">
+          <div class="slot-label">${info.label || slot}</div>
+          <div class="slot-key">${slot}</div>
+          <button class="btn-replace" data-slot="${slot}" data-label="${info.label||slot}">Replace Image</button>
+        </div>
       </div>
-      <button class="slot-replace" data-slot="${slot}" data-label="${info.label || slot}">Replace</button>
     `
-    card.querySelector('.slot-replace').onclick = () => {
-      pendingSlot = { slot, label: info.label || slot }
-      document.getElementById('img-upload-input').click()
-    }
-    container.appendChild(card)
   })
 
-  document.getElementById('img-upload-input').onchange = async e => {
-    const file = e.target.files[0]
-    if (!file || !pendingSlot) return
-    const compressed = await compressImage(file)
-    const fd = new FormData()
-    fd.append('file', compressed, file.name)
-    fd.append('slot', pendingSlot.slot)
-    fd.append('label', pendingSlot.label)
-    const r = await fetch('/api/admin-replace-image', { method:'POST', body: fd, credentials:'include' })
-    if (r.ok) {
-      renderImages()
-    } else {
-      alert('Upload failed: ' + (await r.text()))
+  html += `</div></div></div></div>`
+  pc.innerHTML = html
+
+  document.querySelectorAll('.btn-replace').forEach(btn => {
+    btn.onclick = () => {
+      pendingSlot = {slot: btn.dataset.slot, label: btn.dataset.label}
+      document.getElementById('image-slot-input').click()
     }
-    e.target.value = ''
-    pendingSlot = null
-  }
+  })
+}
+
+document.getElementById('image-slot-input').onchange = async e => {
+  const file = e.target.files[0]
+  if (!file || !pendingSlot) return
+  const compressed = await compressImage(file)
+  const fd = new FormData()
+  fd.append('file', compressed, file.name)
+  fd.append('slot', pendingSlot.slot)
+  fd.append('label', pendingSlot.label)
+  const r = await fetch('/api/admin-replace-image', {method:'POST', body:fd, credentials:'include'})
+  if (r.ok) renderImages()
+  else alert('Upload failed')
+  e.target.value = ''
+  pendingSlot = null
 }
 </script>
 </body>

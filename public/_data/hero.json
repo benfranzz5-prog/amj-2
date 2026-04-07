@@ -4,5 +4,7 @@
   "titleLine2": "Fresh Produce",
   "sub": "Delivering the finest local and specialty produce to chefs, restaurants, caterers, and corporate kitchens across South Australia.",
   "ctaPrimary": "View Our Produce",
-  "ctaOutline": "Enquire Now"
+  "ctaPrimaryHref": "#products",
+  "ctaOutline": "Enquire Now",
+  "ctaOutlineHref": "#contact"
 }
