@@ -7,9 +7,20 @@
     fetch('/_data/contact.json').then(r => r.ok ? r.json() : {}),
     fetch('/_data/images.json').then(r => r.ok ? r.json() : {}),
     pageSection ? fetch(`/_data/${pageSection}.json`).then(r => r.ok ? r.json() : {}) : Promise.resolve({}),
+    fetch('/_data/products.json').then(r => r.ok ? r.json() : null),
   ]
 
-  const [contact, images, pageData] = await Promise.all(fetches)
+  const [contact, images, pageData, products] = await Promise.all(fetches)
+
+  // Render product grid if container exists
+  const productGrid = document.getElementById('product-photo-grid')
+  if (productGrid && Array.isArray(products)) {
+    productGrid.innerHTML = products.map(p => `
+      <div class="product-photo-card">
+        <img src="${p.src}" alt="${p.name}" loading="lazy">
+        <div class="product-photo-card-name">${p.name}</div>
+      </div>`).join('')
+  }
   const data = Object.assign({}, contact, pageData)
 
   // data-cms="key" → textContent

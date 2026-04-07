@@ -180,6 +180,31 @@ body{font-family:'Poppins',system-ui,sans-serif;background:var(--sh-bg);color:va
 .p-env-stat-num{font-family:var(--b-fhead);font-size:1.7rem;font-weight:700;color:#fff;display:block}
 .p-env-stat-label{font-size:.7rem;color:rgba(255,255,255,.88);margin-top:.2rem;display:block}
 
+/* ── PRODUCTS ── */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.875rem;margin-top:1rem}
+.prod-card{background:var(--sh-surface2);border:1px solid var(--sh-border);border-radius:8px;overflow:hidden;position:relative}
+.prod-thumb{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--sh-bg)}
+.prod-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.prod-thumb-empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--sh-muted)}
+.prod-body{padding:.625rem .75rem}
+.prod-name{font-size:.78rem;font-weight:600;margin-bottom:.3rem;color:var(--sh-text)}
+.prod-url{font-size:.65rem;color:var(--sh-muted);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.5rem}
+.prod-actions{display:flex;gap:.4rem}
+.prod-edit-btn{flex:1;padding:.35rem .5rem;background:var(--sh-surface);border:1px solid var(--sh-border);border-radius:5px;color:var(--sh-text);font-size:.7rem;cursor:pointer;font-family:inherit;transition:all .13s}
+.prod-edit-btn:hover{border-color:var(--sh-green);color:var(--sh-green)}
+.prod-del-btn{padding:.35rem .5rem;background:transparent;border:1px solid rgba(248,81,73,.2);border-radius:5px;color:var(--sh-red);font-size:.7rem;cursor:pointer;font-family:inherit;transition:all .13s}
+.prod-del-btn:hover{background:rgba(248,81,73,.08)}
+.prod-edit-panel{display:none;position:absolute;inset:0;background:var(--sh-surface);border:1px solid var(--sh-green);border-radius:8px;padding:.625rem;z-index:10;flex-direction:column;gap:.35rem}
+.prod-edit-panel.open{display:flex}
+.prod-edit-panel label{font-size:.62rem;font-weight:700;text-transform:uppercase;color:var(--sh-muted)}
+.prod-edit-panel input{padding:.35rem .5rem;background:var(--sh-surface2);border:1px solid var(--sh-border);border-radius:5px;color:var(--sh-text);font-size:.72rem;font-family:inherit;width:100%}
+.prod-edit-panel input:focus{outline:none;border-color:var(--sh-green)}
+.prod-edit-footer{display:flex;gap:.35rem;margin-top:auto}
+.prod-edit-save{flex:1;padding:.35rem;background:var(--sh-green);border:none;border-radius:5px;color:#fff;font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit}
+.prod-edit-cancel{padding:.35rem .6rem;background:transparent;border:1px solid var(--sh-border);border-radius:5px;color:var(--sh-muted);font-size:.7rem;cursor:pointer;font-family:inherit}
+.prod-add-btn{display:flex;align-items:center;justify-content:center;gap:.4rem;border:2px dashed var(--sh-border);border-radius:8px;aspect-ratio:4/3;cursor:pointer;color:var(--sh-muted);font-size:.8rem;transition:all .15s;background:transparent}
+.prod-add-btn:hover{border-color:var(--sh-green);color:var(--sh-green)}
+
 /* ── COMMITMENT ── */
 .p-values{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
 .p-value{font-size:.75rem;font-weight:600;padding:.35rem .9rem;background:rgba(154,201,44,.1);border:1px solid rgba(154,201,44,.28);border-radius:20px;color:var(--b-accent-dk)}
@@ -269,6 +294,7 @@ body{font-family:'Poppins',system-ui,sans-serif;background:var(--sh-bg);color:va
       <div class="nav-item" data-section="commitment">🤝 Commitment</div>
       <div class="nav-item" data-section="contact">📞 Contact</div>
       <div class="nav-item" data-section="footer">📄 Footer</div>
+      <div class="nav-item" data-section="products">🥦 Products</div>
       <div class="sb-group">Media</div>
       <div class="nav-item" data-section="gallery">📷 Gallery</div>
       <div class="nav-item" data-section="images">🖼 Site Images</div>
@@ -312,7 +338,7 @@ const LABELS = {
   hero:'Hero', nav:'Navigation', about:'About', fresho:'Fresho / Ordering',
   delivery:'Delivery', mission:'Mission & Vision', testimonials:'Testimonials',
   environment:'Environment', commitment:'Commitment', contact:'Contact',
-  footer:'Footer', gallery:'Gallery', images:'Site Images'
+  footer:'Footer', products:'Products', gallery:'Gallery', images:'Site Images'
 }
 
 /* ── AUTH ── */
@@ -363,16 +389,19 @@ async function load(sec) {
   const lbl = LABELS[sec] || sec
   document.getElementById('tb-title').textContent = lbl
   const saveBtn = document.getElementById('save-btn')
-  const isMedia = sec === 'gallery' || sec === 'images'
+  const isMedia = sec === 'gallery' || sec === 'images' || sec === 'products'
   saveBtn.style.display = isMedia ? 'none' : 'flex'
   document.getElementById('tb-sub').textContent = isMedia
-    ? (sec === 'gallery' ? 'Upload and manage gallery photos' : 'Replace named image slots')
+    ? (sec === 'gallery' ? 'Upload and manage gallery photos'
+       : sec === 'products' ? 'Edit product names & image URLs — then Save All'
+       : 'Replace named image slots')
     : 'Click any text to edit — then Save'
   setStatus('')
 
   if (sec === 'gallery') { renderGallery(); return }
   if (sec === 'images') { renderImages(); return }
   if (sec === 'testimonials') { loadTestimonials(); return }
+  if (sec === 'products') { loadProducts(); return }
 
   document.getElementById('preview').innerHTML =
     `<div style="padding:4rem;text-align:center;color:var(--sh-muted)">Loading ${lbl}…</div>`
@@ -943,6 +972,144 @@ document.getElementById('slot-inp').onchange = async e => {
     else{const j=await r.json().catch(()=>({}));if(errEl&&errMsg){errMsg.textContent=j.error||'Upload failed';errEl.classList.add('show')}}
   }catch(e){if(errEl&&errMsg){errMsg.textContent=e.message;errEl.classList.add('show')}}
   pendingSlot=null
+}
+
+/* ── PRODUCTS ── */
+let prodData = []
+
+async function loadProducts() {
+  const pr = document.getElementById('preview')
+  pr.innerHTML = '<div style="padding:3rem;text-align:center;color:var(--sh-muted)">Loading products…</div>'
+  try {
+    const r = await fetch('/api/admin-content?section=products', {credentials:'include'})
+    if (!r.ok) throw new Error(await r.text())
+    const {content} = await r.json()
+    prodData = Array.isArray(content) ? content.map(p=>({...p})) : []
+    renderProdUI()
+  } catch(e) {
+    pr.innerHTML = `<div style="padding:2rem;color:var(--sh-red)">Error: ${e.message}</div>`
+  }
+}
+
+function renderProdUI() {
+  const pr = document.getElementById('preview')
+  pr.innerHTML = `
+    <div class="media-shell">
+      <div class="media-card">
+        <div class="media-card-head">
+          <h3>Product Gallery</h3>
+          <span class="chip" id="prod-count">${prodData.length} products</span>
+        </div>
+        <div class="media-card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem;gap:1rem">
+            <input id="prod-search" placeholder="Search products…" style="padding:.45rem .75rem;background:var(--sh-surface2);border:1px solid var(--sh-border);border-radius:6px;color:var(--sh-text);font-size:.8rem;font-family:inherit;flex:1;max-width:280px" oninput="filterProds(this.value)"/>
+            <button onclick="addProd()" style="padding:.45rem 1rem;background:var(--sh-green);border:none;border-radius:6px;color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">+ Add Product</button>
+          </div>
+          <div class="prod-grid" id="prod-grid"></div>
+        </div>
+      </div>
+      <div style="padding:.75rem 0;display:flex;justify-content:flex-end">
+        <button onclick="saveProds()" style="padding:.6rem 1.4rem;background:var(--sh-green);border:none;border-radius:6px;color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:.4rem">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save All Changes
+        </button>
+      </div>
+    </div>`
+  renderProdGrid(prodData)
+}
+
+function renderProdGrid(list) {
+  const grid = document.getElementById('prod-grid')
+  if (!grid) return
+  grid.innerHTML = ''
+  list.forEach((p, i) => {
+    const realIdx = prodData.indexOf(p)
+    const card = document.createElement('div')
+    card.className = 'prod-card'
+    card.id = `pc${realIdx}`
+    card.innerHTML = `
+      <div class="prod-thumb">
+        ${p.src ? `<img src="${p.src}" alt="${escAttr(p.name)}" loading="lazy" onerror="this.style.display='none'">` : '<div class="prod-thumb-empty">No image</div>'}
+      </div>
+      <div class="prod-body">
+        <div class="prod-name">${esc(p.name)}</div>
+        <div class="prod-url" title="${escAttr(p.src)}">${p.src ? p.src.split('/').pop() : '—'}</div>
+        <div class="prod-actions">
+          <button class="prod-edit-btn" onclick="openProdEdit(${realIdx})">Edit</button>
+          <button class="prod-del-btn" onclick="delProd(${realIdx})">✕</button>
+        </div>
+      </div>
+      <div class="prod-edit-panel" id="pe${realIdx}">
+        <label>Product Name</label>
+        <input id="pen${realIdx}" value="${escAttr(p.name)}" placeholder="Product name"/>
+        <label style="margin-top:.25rem">Image URL</label>
+        <input id="peu${realIdx}" value="${escAttr(p.src)}" placeholder="https://…"/>
+        <div class="prod-edit-footer">
+          <button class="prod-edit-save" onclick="saveProdEdit(${realIdx})">Save</button>
+          <button class="prod-edit-cancel" onclick="closeProdEdit(${realIdx})">Cancel</button>
+        </div>
+      </div>`
+    grid.appendChild(card)
+  })
+  // Add button
+  const addBtn = document.createElement('button')
+  addBtn.className = 'prod-add-btn'
+  addBtn.innerHTML = '+ Add Product'
+  addBtn.onclick = addProd
+  grid.appendChild(addBtn)
+}
+
+function filterProds(q) {
+  const lower = q.toLowerCase()
+  const filtered = lower ? prodData.filter(p => p.name.toLowerCase().includes(lower)) : prodData
+  renderProdGrid(filtered)
+}
+
+function openProdEdit(i) {
+  document.querySelectorAll('.prod-edit-panel.open').forEach(el => el.classList.remove('open'))
+  document.getElementById('pe'+i)?.classList.add('open')
+}
+function closeProdEdit(i) { document.getElementById('pe'+i)?.classList.remove('open') }
+
+function saveProdEdit(i) {
+  const name = document.getElementById('pen'+i)?.value.trim()
+  const src = document.getElementById('peu'+i)?.value.trim()
+  if (!name) return
+  prodData[i] = {name, src: src||''}
+  renderProdGrid(prodData)
+  updateProdCount()
+}
+
+function delProd(i) {
+  if (!confirm(`Delete "${prodData[i]?.name}"?`)) return
+  prodData.splice(i, 1)
+  renderProdGrid(prodData)
+  updateProdCount()
+}
+
+function addProd() {
+  prodData.push({name:'New Product',src:''})
+  renderProdGrid(prodData)
+  updateProdCount()
+  const newIdx = prodData.length - 1
+  setTimeout(() => openProdEdit(newIdx), 50)
+}
+
+function updateProdCount() {
+  const c = document.getElementById('prod-count')
+  if (c) c.textContent = prodData.length + ' products'
+}
+
+async function saveProds() {
+  setStatus('Saving…')
+  try {
+    const r = await fetch('/api/admin-save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({section:'products', content:prodData}), credentials:'include'
+    })
+    if (!r.ok) throw new Error(await r.text())
+    setStatus('✓ Saved','ok')
+  } catch(e) { setStatus('Error: '+e.message,'err') }
 }
 
 /* ── IMAGE COMPRESSION ── */
