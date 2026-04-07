@@ -1,5 +1,4 @@
 (async function () {
-  // Determine page-specific data file from <meta name="cms-page" content="hero">
   const pageMeta = document.querySelector('meta[name="cms-page"]')
   const pageSection = pageMeta ? pageMeta.getAttribute('content') : null
 
@@ -8,18 +7,23 @@
     fetch('/_data/images.json').then(r => r.ok ? r.json() : {}),
     pageSection ? fetch(`/_data/${pageSection}.json`).then(r => r.ok ? r.json() : {}) : Promise.resolve({}),
     fetch('/_data/products.json').then(r => r.ok ? r.json() : null),
+    fetch('/_data/gallery.json').then(r => r.ok ? r.json() : null),
   ]
 
-  const [contact, images, pageData, products] = await Promise.all(fetches)
+  const [contact, images, pageData, products, gallery] = await Promise.all(fetches)
 
-  // Render product grid if container exists
+  // ── Product photo grid ──
   const productGrid = document.getElementById('product-photo-grid')
   if (productGrid && Array.isArray(products)) {
-    productGrid.innerHTML = products.map(p => `
-      <div class="product-photo-card">
-        <img src="${p.src}" alt="${p.name}" loading="lazy">
-        <div class="product-photo-card-name">${p.name}</div>
-      </div>`).join('')
+    productGrid.innerHTML = products.map(p => {
+      // src may be absolute URL or local path with or without leading slash
+      const imgSrc = p.src.startsWith('http') ? p.src : (p.src.startsWith('/') ? p.src : '/' + p.src)
+      return `
+        <div class="product-photo-card">
+          <img src="${imgSrc}" alt="${p.name}" loading="lazy">
+          <div class="product-photo-card-name">${p.name}</div>
+        </div>`
+    }).join('')
 
     // Apply tooltips after grid renders
     const tooltipData = window._prodTooltips || {}
@@ -42,6 +46,20 @@
       card.appendChild(tip)
     })
   }
+
+  // ── CMS gallery (uploaded photos) ──
+  const gallerySection = document.getElementById('gallery')
+  const galleryGrid = document.getElementById('cms-gallery-grid')
+  if (galleryGrid && Array.isArray(gallery) && gallery.length > 0) {
+    gallerySection.style.display = ''
+    galleryGrid.innerHTML = gallery.map(item => {
+      const imgSrc = item.src.startsWith('http') ? item.src : (item.src.startsWith('/') ? item.src : '/' + item.src)
+      return `<div style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#f0f0f0">
+        <img src="${imgSrc}" alt="Gallery photo" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>`
+    }).join('')
+  }
+
   const data = Object.assign({}, contact, pageData)
 
   // data-cms="key" → textContent
@@ -50,7 +68,7 @@
     if (key in data) el.textContent = data[key]
   })
 
-  // data-cms-html="key" → innerHTML (address fields only — safe subset)
+  // data-cms-html="key" → innerHTML
   document.querySelectorAll('[data-cms-html]').forEach(el => {
     const key = el.getAttribute('data-cms-html')
     if (key in data) el.innerHTML = data[key]

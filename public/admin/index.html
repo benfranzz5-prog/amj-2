@@ -324,6 +324,7 @@ body{font-family:'Poppins',system-ui,sans-serif;background:var(--sh-bg);color:va
 
 <input type="file" id="gallery-inp" multiple accept="image/*" style="display:none"/>
 <input type="file" id="slot-inp" accept="image/*" style="display:none"/>
+<input type="file" id="prod-img-inp" accept="image/*" style="display:none"/>
 
 <script>
 'use strict'
@@ -1042,8 +1043,11 @@ function renderProdGrid(list) {
       <div class="prod-edit-panel" id="pe${realIdx}">
         <label>Product Name</label>
         <input id="pen${realIdx}" value="${escAttr(p.name)}" placeholder="Product name"/>
-        <label style="margin-top:.25rem">Image URL</label>
-        <input id="peu${realIdx}" value="${escAttr(p.src)}" placeholder="https://…"/>
+        <label style="margin-top:.25rem">Image</label>
+        <div style="display:flex;gap:.35rem;align-items:center">
+          <input id="peu${realIdx}" value="${escAttr(p.src)}" placeholder="Path or URL" style="flex:1;font-size:.65rem"/>
+          <button onclick="triggerProdImg(${realIdx})" style="padding:.3rem .5rem;background:var(--sh-green);border:none;border-radius:4px;color:#fff;font-size:.65rem;cursor:pointer;white-space:nowrap;font-family:inherit">Upload</button>
+        </div>
         <div class="prod-edit-footer">
           <button class="prod-edit-save" onclick="saveProdEdit(${realIdx})">Save</button>
           <button class="prod-edit-cancel" onclick="closeProdEdit(${realIdx})">Cancel</button>
@@ -1098,6 +1102,56 @@ function addProd() {
 function updateProdCount() {
   const c = document.getElementById('prod-count')
   if (c) c.textContent = prodData.length + ' products'
+}
+
+let pendingProdIdx = null
+
+function triggerProdImg(i) {
+  pendingProdIdx = i
+  document.getElementById('prod-img-inp').click()
+}
+
+document.getElementById('prod-img-inp').onchange = async e => {
+  const file = e.target.files[0]; e.target.value = ''
+  if (!file || pendingProdIdx === null) return
+  const i = pendingProdIdx; pendingProdIdx = null
+
+  const errEl = document.getElementById('g-err')
+  const errMsg = document.getElementById('g-err-msg')
+  if (errEl) errEl.classList.remove('show')
+
+  if (file.size > 1024 * 1024) {
+    if (errEl && errMsg) { errMsg.textContent = `"${file.name}" — Image must be under 1MB`; errEl.classList.add('show') }
+    return
+  }
+
+  // Show uploading state
+  const urlInput = document.getElementById('peu' + i)
+  if (urlInput) urlInput.value = 'Uploading…'
+
+  const blob = await compressImg(file)
+  const fd = new FormData()
+  fd.append('file', blob, file.name)
+  fd.append('slot', 'product_' + i)
+  fd.append('label', prodData[i]?.name || 'product')
+
+  try {
+    const r = await fetch('/api/admin-replace-image', { method: 'POST', body: fd, credentials: 'include' })
+    if (r.ok) {
+      const { src } = await r.json()
+      if (urlInput) urlInput.value = src
+      // Update preview thumb
+      const card = document.getElementById('pc' + i)
+      const thumb = card?.querySelector('.prod-thumb img')
+      if (thumb) { thumb.src = src.startsWith('/') ? src : '/' + src; thumb.style.display = '' }
+    } else {
+      const j = await r.json().catch(() => ({}))
+      if (urlInput) urlInput.value = prodData[i]?.src || ''
+      if (errEl && errMsg) { errMsg.textContent = j.error || 'Upload failed'; errEl.classList.add('show') }
+    }
+  } catch (err) {
+    if (urlInput) urlInput.value = prodData[i]?.src || ''
+  }
 }
 
 async function saveProds() {
