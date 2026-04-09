@@ -827,37 +827,12 @@
 
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 4rem;
+      grid-template-columns: 1fr;
+      gap: 0;
       align-items: center;
     }
 
-    .about-image {
-      position: relative;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-    }
-
-    .about-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: cover;
-    }
-
     .about-content { display: flex; flex-direction: column; gap: 1.5rem; }
-
-    @media (max-width: 900px) {
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .about-image {
-        max-width: 320px;
-        margin: 0 auto;
-      }
-    }
 
     .about-pillars {
       display: grid;
@@ -2129,11 +2104,6 @@
     <section class="about section-pad" id="about" aria-label="About AMJ Produce">
       <div class="section-inner">
         <div class="about-grid">
-
-          <!-- Image Column -->
-          <div class="about-image reveal">
-            <img src="images/margy.jpg" alt="Margy Abbot, Co-owner of AMJ Produce" />
-          </div>
 
           <!-- Text Column -->
           <div class="about-content">
